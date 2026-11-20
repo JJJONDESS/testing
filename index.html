@@ -4,7 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Menu AR</title>
-<script src="dishes.js"></scriparent; color: #fff; font-family: system-ui, sans-serif; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+<script src="dishes.js"></script>
+<!-- The menu page loads nothing heavy. On a dish page the 3D viewer loads first (see the script below), so the dish appears quickly. The camera/AR engine (A-Frame + MindAR) loads afterwards in the background. -->
+<script type="module" src="app.js"></script>
+<link rel="preconnect" href="https://aframe.io">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<style>
+  /* IMPORTANT: no background on html/body, or it hides the camera feed */
+  html, body { margin: 0; height: 100%; background: transparent; color: #fff; font-family: system-ui, sans-serif; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
   .a-enter-vr, .a-enter-ar { display: none !important; }
   .screen { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center;
             padding: 24px; text-align: center; background: #1c1410; z-index: 20; }
