@@ -438,7 +438,7 @@
          mindar-image="imageTargetSrc: ${DISH.mind}; autoStart: false; uiLoading: no; uiScanning: no; uiError: no; maxTrack: 1; filterMinCF: 0.0001; filterBeta: 0.001;"
          color-space="sRGB" renderer="colorManagement: true; physicallyCorrectLights: true"
          vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-  <a-assets><a-asset-item id="dish" src="${DISH.glb}"></a-asset-item><img id="holoTex" src="dishes/holo-base.png"><img id="smokeTex" src="dishes/smoke.png"></a-assets>
+  <a-assets><a-asset-item id="dish" src="${DISH.glb}"></a-asset-item></a-assets>
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
   <a-light type="ambient" intensity="1.2"></a-light>
   <a-light type="directional" intensity="1" position="0.5 1 1"></a-light>
@@ -448,7 +448,7 @@
               animation__spin="property: rotation; from: 0 0 0; to: 0 0 360; dur: 1500; easing: easeOutCubic; startEvents: popstart">
       <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
         <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
-        <a-plane src="#holoTex" position="0 0 -0.06" width="1.1" height="1.1" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
+        <a-plane src="dishes/holo-base.png" position="0 0 -0.06" width="1.1" height="1.1" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
       </a-entity></a-entity></a-entity>
       <a-entity position="0.45 0 0.45">
         <a-plane width="0.99" height="0.42" position="0 0 -0.005" material="color: #00e5ff; transparent: true; opacity: 0.25"></a-plane>
@@ -456,8 +456,8 @@
         <a-text value="${DISH.name}  Rs ${DISH.price}" align="center" color="#ffffff" width="0.9" position="0 0 0.01"></a-text>
       </a-entity>
       <a-entity id="smoke">
-        <a-plane src="#smokeTex" position="0 0 0.3" width="0.6" height="0.6" transparent="true" material="transparent: true; opacity: 0; depthWrite: false" animation__rise="property: position; from: 0 0 0.25; to: 0 0 0.75; dur: 3000; loop: true" animation__fade="property: material.opacity; from: 0; to: 0.55; dur: 1500; dir: alternate; loop: true"></a-plane>
-        <a-plane src="#smokeTex" position="0 0 0.3" width="0.5" height="0.5" transparent="true" material="transparent: true; opacity: 0; depthWrite: false" animation__rise="property: position; from: 0 0 0.25; to: 0 0 0.75; dur: 3000; delay: 1000; loop: true" animation__fade="property: material.opacity; from: 0; to: 0.45; dur: 1500; delay: 1000; dir: alternate; loop: true"></a-plane>
+        <a-plane src="dishes/smoke.png" position="0 0 0.3" width="0.6" height="0.6" transparent="true" material="transparent: true; opacity: 0; depthWrite: false" animation__rise="property: position; from: 0 0 0.25; to: 0 0 0.75; dur: 3000; loop: true" animation__fade="property: material.opacity; from: 0; to: 0.55; dur: 1500; dir: alternate; loop: true"></a-plane>
+        <a-plane src="dishes/smoke.png" position="0 0 0.3" width="0.5" height="0.5" transparent="true" material="transparent: true; opacity: 0; depthWrite: false" animation__rise="property: position; from: 0 0 0.25; to: 0 0 0.75; dur: 3000; delay: 1000; loop: true" animation__fade="property: material.opacity; from: 0; to: 0.45; dur: 1500; delay: 1000; dir: alternate; loop: true"></a-plane>
       </a-entity>
     </a-entity>
   </a-entity>
