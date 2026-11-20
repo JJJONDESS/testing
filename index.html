@@ -450,14 +450,15 @@
         <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
         <a-plane src="dishes/holo-base.png" position="0 0 -0.06" width="1.1" height="1.1" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
       </a-entity></a-entity></a-entity>
-      <a-entity position="0.45 0 0.45">
-        <a-plane width="0.99" height="0.42" position="0 0 -0.005" material="color: #00e5ff; transparent: true; opacity: 0.25"></a-plane>
-        <a-plane width="0.95" height="0.38" material="color: #ffffff; transparent: true; opacity: 0.18"></a-plane>
-        <a-text value="${DISH.name}  Rs ${DISH.price}" align="center" color="#ffffff" width="0.9" position="0 0 0.01"></a-text>
+      <a-entity position="0.32 0.12 0.20">
+        <a-plane width="0.62" height="0.26" position="0 0 -0.005" material="color: #00e5ff; transparent: true; opacity: 0.35; depthWrite: false"></a-plane>
+        <a-plane width="0.58" height="0.22" material="color: #ffffff; transparent: true; opacity: 0.28; depthWrite: false"></a-plane>
+        <a-text value="${DISH.name}  Rs ${DISH.price}" align="center" color="#ffffff" width="0.52" position="0 0 0.01"></a-text>
       </a-entity>
       <a-entity id="smoke">
-        <a-plane src="dishes/smoke.png" position="0 0 0.3" width="0.6" height="0.6" transparent="true" material="transparent: true; opacity: 0; depthWrite: false" animation__rise="property: position; from: 0 0 0.25; to: 0 0 0.75; dur: 3000; loop: true" animation__fade="property: material.opacity; from: 0; to: 0.55; dur: 1500; dir: alternate; loop: true"></a-plane>
-        <a-plane src="dishes/smoke.png" position="0 0 0.3" width="0.5" height="0.5" transparent="true" material="transparent: true; opacity: 0; depthWrite: false" animation__rise="property: position; from: 0 0 0.25; to: 0 0 0.75; dur: 3000; delay: 1000; loop: true" animation__fade="property: material.opacity; from: 0; to: 0.45; dur: 1500; delay: 1000; dir: alternate; loop: true"></a-plane>
+        <a-plane src="dishes/smoke.png" position="0 0 0.28" width="0.55" height="0.55" transparent="true" material="transparent: true; opacity: 0.75; depthWrite: false" animation__rise="property: position; from: 0 0 0.28; to: 0 0 0.85; dur: 3500; loop: true" animation__grow="property: scale; from: 0.6 0.6 0.6; to: 1.1 1.1 1.1; dur: 3500; loop: true"></a-plane>
+        <a-plane src="dishes/smoke.png" position="0 0 0.28" width="0.5" height="0.5" transparent="true" material="transparent: true; opacity: 0.65; depthWrite: false" animation__rise="property: position; from: 0 0 0.28; to: 0 0 0.85; dur: 3500; delay: 1200; loop: true" animation__grow="property: scale; from: 0.6 0.6 0.6; to: 1.1 1.1 1.1; dur: 3500; delay: 1200; loop: true"></a-plane>
+        <a-plane src="dishes/smoke.png" position="0 0 0.28" width="0.45" height="0.45" transparent="true" material="transparent: true; opacity: 0.55; depthWrite: false" animation__rise="property: position; from: 0 0 0.28; to: 0 0 0.85; dur: 3500; delay: 2400; loop: true" animation__grow="property: scale; from: 0.6 0.6 0.6; to: 1.1 1.1 1.1; dur: 3500; delay: 2400; loop: true"></a-plane>
       </a-entity>
     </a-entity>
   </a-entity>
