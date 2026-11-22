@@ -27,6 +27,14 @@
           text-shadow: 0 1px 4px #000; transition: opacity .3s; }
   #hud { position: fixed; top: 12px; right: 12px; z-index: 15; display: none; }
   #hud button { padding: 8px 16px; background: rgba(0,0,0,.55); font-size: .9rem; }
+  /* ===== FIXED AR LABEL - change this to move / resize the label yourself =====
+     top:    bigger number = lower on the screen, smaller = higher
+     font-size: bigger = bigger text. padding: space inside the glass box. */
+  #arlabel { display: none; position: fixed; top: calc(58px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
+             z-index: 14; pointer-events: none; text-align: center; padding: 8px 18px; border-radius: 14px;
+             background: rgba(0,0,0,.55); border: 1px solid rgba(0,229,255,.7); color: #fff; font-weight: 700; font-size: 1.05rem; line-height: 1.25;
+             white-space: nowrap; max-width: 92vw; }
+  #arlabel .pr { display: block; color: #00e5ff; font-size: .95rem; }
   button.alt { background: #fff; color: #1c1410; }
   #start { padding: 0; justify-content: flex-end; }
   #start model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; --poster-color: transparent;
@@ -213,6 +221,7 @@
   </div></div>
 </div>
 
+<div id="arlabel"><span id="arlabel-name"></span><span class="pr" id="arlabel-price"></span></div>
 <div id="hud"><button id="detach">Detach</button><button id="mode" style="display:none">Drag: Rotate</button><button id="hud3d">3D view</button></div>
 <div id="hint"></div>
 
@@ -296,6 +305,9 @@
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   document.title = DISH.name + ' · ' + RESTAURANT.name;
   $('dname').textContent = DISH.name;
+  // Fixed AR label: text comes from dishes.js, so changing name/price there changes this label too - no new picture needed.
+  $('arlabel-name').textContent = DISH.name;
+  $('arlabel-price').textContent = DISH.price ? 'Rs ' + DISH.price : '';
   if (DISH.price) { $('price').textContent = DISH.price; $('price').style.display = ''; }
   $('wa').onclick = () => window.open('https://wa.me/' + RESTAURANT.whatsapp + '?text=' + encodeURIComponent('Hi, I would like to order: ' + DISH.name), '_blank');
   [['sdesc', DISH.description, ''], ['sing', DISH.ingredients, 'Ingredients: '], ['sall', DISH.allergens, 'Allergens: ']].forEach(([id, v, pre]) => {
@@ -316,7 +328,7 @@
     $('go').classList.add('alt');
   }
 
-  const show = id => { ['start', 'error'].forEach(s => $(s).classList.toggle('on', s === id)); $('start').classList.remove('only3d'); document.body.classList.remove('hide-fab'); };
+  const show = id => { $('arlabel').style.display = 'none'; ['start', 'error'].forEach(s => $(s).classList.toggle('on', s === id)); $('start').classList.remove('only3d'); document.body.classList.remove('hide-fab'); };
   const hint = t => { $('hint').textContent = t; };
   function showError(title, msg, code) {
     $('errtitle').textContent = title; $('errmsg').textContent = msg; $('errcode').textContent = code || '';
@@ -448,7 +460,6 @@
         <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
         <a-plane src="dishes/holo-base.png" position="0 0 -0.06" width="1.1" height="1.1" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
       </a-entity>
-      <a-plane src="${DISH.label}" position="0 0.68 0.22" width="0.48" height="0.17" transparent="true" material="transparent: true; depthWrite: false"></a-plane>
       </a-entity></a-entity>
     </a-entity>
   </a-entity>
@@ -495,6 +506,7 @@
       }
       started = true;
       $('hud').style.display = 'block';
+      $('arlabel').style.display = 'block';
       hint('Point at the dish photo on the menu');
     } catch (e) {
       console.error(e);
@@ -528,6 +540,7 @@
     started = false;
     if (window.__attachBack) window.__attachBack(false);
     $('hud').style.display = 'none';
+    $('arlabel').style.display = 'none';
     hint('');
   }
   function open3D() { stopAR(); show('start'); $('start').classList.add('only3d'); document.body.classList.add('hide-fab'); }
