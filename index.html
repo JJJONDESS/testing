@@ -460,6 +460,13 @@
         <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
         <a-plane src="dishes/holo-base.png" position="0 0 -0.06" width="1.1" height="1.1" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
       </a-entity>
+      <!-- Hologram pedestal (like the blue glass stand in your 2nd picture):
+           a transparent cyan beam under the pizza, with a glowing ring at the top and bottom.
+           It is inside tilt/zoom (so it moves and scales with the pizza) but outside spin (so it does not spin). -->
+      <a-cylinder radius="0.42" height="0.38" open-ended="true" rotation="90 0 0" position="0 0 -0.28" material="color: #00e5ff; transparent: true; opacity: 0.16; side: double; depthWrite: false"></a-cylinder>
+      <a-cylinder radius="0.30" height="0.38" open-ended="true" rotation="90 0 0" position="0 0 -0.28" material="color: #00e5ff; transparent: true; opacity: 0.08; side: double; depthWrite: false"></a-cylinder>
+      <a-ring radius-inner="0.44" radius-outer="0.50" position="0 0 -0.10" material="color: #00e5ff; transparent: true; opacity: 0.85; side: double; depthWrite: false"></a-ring>
+      <a-ring radius-inner="0.44" radius-outer="0.50" position="0 0 -0.46" material="color: #00e5ff; transparent: true; opacity: 0.55; side: double; depthWrite: false"></a-ring>
       </a-entity></a-entity>
     </a-entity>
   </a-entity>
