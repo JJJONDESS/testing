@@ -12,8 +12,7 @@ const DISHES = {
     glb:    'dishes/mcart_small-v1.glb',                          
     glbIos: 'dishes/mcart_ios-v1.glb',                           
     mind:   'dishes/mcart-targets.mind',                        
-    poster: 'dishes/mcart-poster.jpg',
-    label:  'dishes/label-mcart.png'                          
+    poster: 'dishes/mcart-poster.jpg'                          
   },
 
   'Mr-Pizza': {                                                       
@@ -22,8 +21,7 @@ const DISHES = {
     glb:    'dishes/mr_pizza_small-v1.glb',                      
     glbIos: 'dishes/mr_pizza_ios-v1.glb',                       
     mind:   'dishes/mr-pizza-target.mind',                     
-    poster: 'dishes/mr-pizza-poster.jpg',
-    label:  'dishes/label-mr-pizza.png'                      
+    poster: 'dishes/mr-pizza-poster.jpg'                      
   },
 
   'VegPizza': {                                                       
@@ -32,8 +30,7 @@ const DISHES = {
     glb:    'dishes/VegPizza_small-v1.glb',                      
     glbIos: 'dishes/VegPizza_ios-v1.glb',                       
     mind:   'dishes/VegPizza.mind',                     
-    poster: 'dishes/VegPizzaimage.jpg',
-    label:  'dishes/label-vegpizza.png'                      
+    poster: 'dishes/VegPizzaimage.jpg'                      
   }
 
 };
