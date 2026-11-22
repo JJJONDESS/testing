@@ -144,7 +144,6 @@ const STATUS = {
 };
 
 function initCustomerUI() {
-  getTable(); // save ?table=5 from the QR link now, so it is not lost when the customer taps a dish
   document.body.classList.add('ordering-on');
   if ($('wa')) $('wa').style.display = 'none';
 
