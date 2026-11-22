@@ -29,8 +29,9 @@ const DISHES = {
   'VegPizza': {                                                       
     name: 'MR-VegPizza',
     price: '1599', description: 'Fresh vegetables on a hand-stretched base', ingredients: 'Mushroom, capsicum, olives, onion, mozzarella', allergens: 'Gluten, Dairy',   
-    glb:    'dishes/VegPizza_small-v1.glb',                      
-    glbIos: 'dishes/VegPizza_ios-v1.glb',                       
+    glb:    'dishes/VegPizza_small-v1.glb',
+    glbIos: 'dishes/VegPizza_ios-v1.glb',
+    scale:  '1 1 1',
     mind:   'dishes/VegPizza.mind',                     
     poster: 'dishes/VegPizzaimage.jpg',
     label:  'dishes/label-vegpizza.png'                      
