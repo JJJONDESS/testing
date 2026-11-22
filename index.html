@@ -271,7 +271,7 @@
     Object.keys(DISHES).forEach(k => {
       const d = DISHES[k];
       const card = mk('div', 'card');
-      const a = mk('a', 'clink'); a.href = '?item=' + encodeURIComponent(k);
+      const a = mk('a', 'clink'); const _t = new URLSearchParams(location.search).get('table'); a.href = '?item=' + encodeURIComponent(k) + (_t ? '&table=' + encodeURIComponent(_t) : '');
       const pic = mk('div', 'pic');
       if (d.poster) { const im = new Image(); im.alt = d.name; im.loading = 'lazy'; im.decoding = 'async'; im.src = d.poster; pic.appendChild(im); }
       else pic.appendChild(mk('span', '', '🍽'));
@@ -310,7 +310,7 @@
   if (!RESTAURANT.whatsapp) $('wa').style.display = 'none';   // clear the number in dishes.js to hide the button
 
   $('addcart').setAttribute('data-add', key);   // the cart code in app.js shows this button when ordering is on
-  if (Object.keys(DISHES).length > 1) { $('menulink').style.display = 'block'; $('menulink').href = location.pathname; }   // back to the menu page
+  if (Object.keys(DISHES).length > 1) { $('menulink').style.display = 'block'; const _t2 = new URLSearchParams(location.search).get('table'); $('menulink').href = location.pathname + (_t2 ? '?table=' + encodeURIComponent(_t2) : ''); }   // back to the menu page, keeping the table number
 
   if (isIOS) {   // iPhone: AR button goes first and becomes the main button
     $('ar').style.order = '-1';
@@ -449,17 +449,14 @@
       <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
         <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
         <a-plane src="dishes/holo-base.png" position="0 0 -0.06" width="1.1" height="1.1" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
-      </a-entity></a-entity></a-entity>
-      <a-entity position="0.32 0.12 0.20">
-        <a-plane width="0.62" height="0.26" position="0 0 -0.005" material="color: #00e5ff; transparent: true; opacity: 0.35; depthWrite: false"></a-plane>
-        <a-plane width="0.58" height="0.22" material="color: #ffffff; transparent: true; opacity: 0.28; depthWrite: false"></a-plane>
-        <a-text value="${DISH.name}  Rs ${DISH.price}" align="center" color="#ffffff" width="0.52" position="0 0 0.01"></a-text>
       </a-entity>
       <a-entity id="smoke">
-        <a-plane src="dishes/smoke.png" position="0 0 0.28" width="0.55" height="0.55" transparent="true" material="transparent: true; opacity: 0.75; depthWrite: false" animation__rise="property: position; from: 0 0 0.28; to: 0 0 0.85; dur: 3500; loop: true" animation__grow="property: scale; from: 0.6 0.6 0.6; to: 1.1 1.1 1.1; dur: 3500; loop: true"></a-plane>
-        <a-plane src="dishes/smoke.png" position="0 0 0.28" width="0.5" height="0.5" transparent="true" material="transparent: true; opacity: 0.65; depthWrite: false" animation__rise="property: position; from: 0 0 0.28; to: 0 0 0.85; dur: 3500; delay: 1200; loop: true" animation__grow="property: scale; from: 0.6 0.6 0.6; to: 1.1 1.1 1.1; dur: 3500; delay: 1200; loop: true"></a-plane>
-        <a-plane src="dishes/smoke.png" position="0 0 0.28" width="0.45" height="0.45" transparent="true" material="transparent: true; opacity: 0.55; depthWrite: false" animation__rise="property: position; from: 0 0 0.28; to: 0 0 0.85; dur: 3500; delay: 2400; loop: true" animation__grow="property: scale; from: 0.6 0.6 0.6; to: 1.1 1.1 1.1; dur: 3500; delay: 2400; loop: true"></a-plane>
+        <a-plane src="dishes/smoke-classy.png" position="0 0 0.22" width="0.85" height="0.75" transparent="true" material="transparent: true; opacity: 0.7; depthWrite: false" animation__rise="property: position; from: 0 0 0.22; to: 0 0 0.55; dur: 3500; loop: true" animation__grow="property: scale; from: 0.8 0.8 0.8; to: 1.15 1.15 1.15; dur: 3500; loop: true" animation__fade="property: material.opacity; from: 0.7; to: 0; dur: 3500; loop: true"></a-plane>
+        <a-plane src="dishes/smoke-classy.png" position="0.08 0 0.22" width="0.75" height="0.68" transparent="true" material="transparent: true; opacity: 0.6; depthWrite: false" animation__rise="property: position; from: 0.08 0 0.22; to: 0.08 0 0.55; dur: 3500; delay: 1200; loop: true" animation__grow="property: scale; from: 0.8 0.8 0.8; to: 1.15 1.15 1.15; dur: 3500; delay: 1200; loop: true" animation__fade="property: material.opacity; from: 0.6; to: 0; dur: 3500; delay: 1200; loop: true"></a-plane>
+        <a-plane src="dishes/smoke-classy.png" position="-0.08 0 0.22" width="0.65" height="0.60" transparent="true" material="transparent: true; opacity: 0.5; depthWrite: false" animation__rise="property: position; from: -0.08 0 0.22; to: -0.08 0 0.55; dur: 3500; delay: 2400; loop: true" animation__grow="property: scale; from: 0.8 0.8 0.8; to: 1.15 1.15 1.15; dur: 3500; delay: 2400; loop: true" animation__fade="property: material.opacity; from: 0.5; to: 0; dur: 3500; delay: 2400; loop: true"></a-plane>
       </a-entity>
+      </a-entity></a-entity>
+      <a-plane src="${DISH.label}" position="-0.38 0.32 0.22" width="0.48" height="0.17" transparent="true" material="transparent: true; depthWrite: false"></a-plane>
     </a-entity>
   </a-entity>
 </a-scene>`);
