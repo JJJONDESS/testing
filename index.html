@@ -506,7 +506,7 @@
       }
       started = true;
       $('hud').style.display = 'block';
-      $('arlabel').style.display = 'block';
+      // Label stays hidden here - it only appears when the target photo is found and the pizza pops up (see targetFound below).
       hint('Point at the dish photo on the menu');
     } catch (e) {
       console.error(e);
@@ -564,12 +564,13 @@
     const playPop = () => pop.emit('popstart');
     t0.addEventListener('targetFound', () => {
       found = true; clearTimeout(goneTimer);
+      $('arlabel').style.display = 'block';   // exact time the pizza is loaded / pops up
       if (!detached) hint('Drag to rotate · pinch to zoom');
       if (!detached && gone) { gone = false; playPop(); }
     });
     t0.addEventListener('targetLost', () => {
       found = false;
-      if (!detached) hint('Point at the dish photo on the menu');
+      if (!detached) { $('arlabel').style.display = 'none'; hint('Point at the dish photo on the menu'); }
       clearTimeout(goneTimer);
       goneTimer = setTimeout(() => { gone = true; }, 1200);
     });
@@ -612,6 +613,7 @@
       pop.object3D.position.set(0, 0, 0); pop.object3D.quaternion.identity(); pop.object3D.scale.set(1, 1, 1);
       zv = 1; zoom.object3D.scale.setScalar(1);
       detached = false; dbtn.textContent = 'Detach';
+      $('arlabel').style.display = found ? 'block' : 'none';
       moveMode = false; $('mode').textContent = 'Drag: Rotate'; $('mode').style.display = 'none';
       hint(found ? '' : 'Point at the dish photo on the menu');
       if (found && playAnim !== false) playPop();
