@@ -468,14 +468,14 @@
               animation__spin="property: rotation; from: 0 0 0; to: 0 0 360; dur: 1500; easing: easeOutCubic; startEvents: popstart">
       <a-entity id="zoom" animation__float="property: position; from: 0 0 0; to: 0 0 0.03; dur: 3000; dir: alternate; loop: true; easing: easeInOutSine"><a-entity id="tilt"><a-entity id="spin">
         <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
-        <a-plane src="dishes/holo-base.png" position="0 0 -0.30" width="1.4" height="1.4" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
+        <a-plane src="dishes/holo-base-black.png" position="0 0 -0.30" width="1.4" height="1.4" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
       </a-entity>
       <!-- Hologram pedestal (like the blue glass stand in your 2nd picture):
            a transparent cyan beam under the pizza, with a glowing ring at the top and bottom.
            It is inside tilt/zoom (so it moves and scales with the pizza) but outside spin (so it does not spin). -->
       <a-cylinder radius="0.65" height="0.60" open-ended="true" rotation="90 0 0" position="0 0 0.00" material="color: #FFC20F; transparent: true; opacity: 0.12; side: double; depthWrite: false"></a-cylinder>
       <a-cylinder radius="0.55" height="0.60" open-ended="true" rotation="90 0 0" position="0 0 0.00" material="color: #FFC20F; transparent: true; opacity: 0.06; side: double; depthWrite: false"></a-cylinder>
-      <a-ring radius-inner="0.62" radius-outer="0.68" position="0 0 0.30" material="color: #ffd166; transparent: true; opacity: 0.85; side: double; depthWrite: false" animation__pulse="property: material.opacity; from: 0.9; to: 0.45; dur: 2000; dir: alternate; loop: true; easing: easeInOutSine"></a-ring>
+      <a-ring radius-inner="0.62" radius-outer="0.68" position="0 0 0.30" material="color: #FFC20F; transparent: true; opacity: 0.85; side: double; depthWrite: false" animation__pulse="property: material.opacity; from: 0.9; to: 0.45; dur: 2000; dir: alternate; loop: true; easing: easeInOutSine"></a-ring>
       <a-ring radius-inner="0.62" radius-outer="0.68" position="0 0 -0.30" material="color: #FFC20F; transparent: true; opacity: 0.55; side: double; depthWrite: false" animation__pulse="property: material.opacity; from: 0.6; to: 0.3; dur: 2000; dir: alternate; loop: true; easing: easeInOutSine"></a-ring>
       <!-- soft shadow under the pizza, on the hologram floor -->
       <a-plane src="dishes/shadow.png" position="0 0 -0.28" width="0.95" height="0.95" transparent="true" material="transparent: true; opacity: 0.45; depthWrite: false"></a-plane>
