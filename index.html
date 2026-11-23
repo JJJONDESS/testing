@@ -32,15 +32,15 @@
      font-size: bigger = bigger text. padding: space inside the glass box. */
   #arlabel { display: none; position: fixed; top: calc(58px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%);
              z-index: 14; pointer-events: none; text-align: center; padding: 8px 18px; border-radius: 14px;
-             background: rgba(0,0,0,.55); border: 1px solid rgba(0,229,255,.7); color: #fff; font-weight: 700; font-size: 1.05rem; line-height: 1.25;
+             background: rgba(0,0,0,.55); border: 1px solid #FFC20F; color: #fff; font-weight: 700; font-size: 1.05rem; line-height: 1.25;
              white-space: nowrap; max-width: 92vw; }
-  #arlabel .pr { display: block; color: #00e5ff; font-size: .95rem; }
-  #arlabel .rn { display: block; color: #ffd166; font-size: .72rem; letter-spacing: .12em; }
-  /* AR actions: Add to cart + Photo, bottom centre, only in AR */
-  #aractions { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 14; gap: 8px; }
-  #aractions button { padding: 12px 18px; border-radius: 999px; font-weight: 700; font-size: .95rem; }
-  #hudadd { background: #1fa855; color: #fff; }
-  #hudphoto { background: rgba(0,0,0,.55); color: #fff; }
+  #arlabel .pr { display: block; color: #FFC20F; font-size: .95rem; }
+  #arlabel .rn { display: block; color: #FFC20F; font-size: .72rem; letter-spacing: .12em; }
+  /* AR actions: Add to cart + Photo, bottom centre, only in AR - Melt9 colours #FFC20F / #000000 */
+  #aractions { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(68px + env(safe-area-inset-bottom, 0px)); z-index: 14; gap: 10px; width: max-content; max-width: 94vw; flex-wrap: nowrap; }
+  #aractions button { flex: 0 0 auto; white-space: nowrap; margin: 0; padding: 13px 18px; border-radius: 999px; font-weight: 700; font-size: .92rem; line-height: 1; box-shadow: 0 4px 14px rgba(0,0,0,.45); }
+  #hudadd { background: #FFC20F; color: #000000; }
+  #hudphoto { background: #000000; color: #FFC20F; border: 1px solid #FFC20F; }
   button.alt { background: #fff; color: #1c1410; }
   #start { padding: 0; justify-content: flex-end; }
   #start model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; --poster-color: transparent;
@@ -314,7 +314,7 @@
   $('dname').textContent = DISH.name;
   // Fixed AR label: text comes from dishes.js, so changing name/price there changes this label too - no new picture needed.
   $('hudadd').setAttribute('data-add', key);
-  $('hudadd').textContent = '+ Add to cart · Rs ' + DISH.price;
+  $('hudadd').textContent = '+ Add · Rs ' + DISH.price;
   $('arlabel-rest').textContent = (RESTAURANT.name || '').toUpperCase();
   $('arlabel-name').textContent = DISH.name;
   $('arlabel-price').textContent = DISH.price ? 'Rs ' + DISH.price : '';
@@ -557,24 +557,35 @@
     if (heroFinished) startEngine();    // otherwise heroDone() starts it right after the dish has loaded
   };
 
-  // Photo: composite the camera video + the AR canvas, add a Melt9 watermark, then share or download it.
-  // This runs only when the customer taps Photo, so it costs nothing while they are just looking.
+  // Photo: render the AR scene fresh, then composite camera video + WebGL canvas in the same frame.
+  // The old version waited 120ms after hiding the buttons - by then the WebGL canvas had already been
+  // cleared, so the shared photo had only the camera floor and no pizza. This version draws immediately
+  // after a fresh render, so the pizza is in the photo.
   $('hudphoto').onclick = async () => {
+    const labelWasShown = $('arlabel').style.display === 'block';
     try {
       const video = document.querySelector('#scene video') || document.querySelector('video');
-      const sc = scene && scene.canvas;
-      if (!video || !video.videoWidth || !sc) { hint('Take a screenshot with your phone buttons instead'); return; }
-      const labelWasShown = $('arlabel').style.display === 'block';
+      const gl = scene && scene.canvas;
+      if (!video || !video.videoWidth || !gl || !gl.width) { hint('Take a screenshot with your phone buttons instead'); return; }
       $('hud').style.display = 'none'; $('aractions').style.display = 'none'; $('arlabel').style.display = 'none'; hint('');
-      await new Promise(r => setTimeout(r, 120));
-      const c = document.createElement('canvas'); c.width = video.videoWidth; c.height = video.videoHeight;
+      await new Promise(r => requestAnimationFrame(r));
+      if (scene.renderer) scene.renderer.render(scene.object3D, scene.camera);
+      const W = gl.width, H = gl.height;
+      const c = document.createElement('canvas'); c.width = W; c.height = H;
       const x = c.getContext('2d');
-      x.drawImage(video, 0, 0, c.width, c.height);
-      x.drawImage(sc, 0, 0, c.width, c.height);
-      x.fillStyle = 'rgba(0,0,0,0.55)'; x.fillRect(0, c.height - 64, c.width, 64);
-      x.fillStyle = '#fff'; x.font = 'bold 28px system-ui, sans-serif'; x.textAlign = 'center';
-      x.fillText((RESTAURANT.name || 'Melt9') + '  •  ' + DISH.name + '  •  Rs ' + DISH.price, c.width / 2, c.height - 22);
-      const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.9));
+      const s = Math.max(W / video.videoWidth, H / video.videoHeight);
+      const vw = video.videoWidth * s, vh = video.videoHeight * s;
+      x.drawImage(video, (W - vw) / 2, (H - vh) / 2, vw, vh);
+      x.drawImage(gl, 0, 0, W, H);
+      const barH = Math.round(H * 0.09);
+      x.fillStyle = 'rgba(0,0,0,0.72)'; x.fillRect(0, H - barH, W, barH);
+      x.fillStyle = '#FFC20F'; x.textAlign = 'center';
+      const fs = Math.round(H * 0.028);
+      x.font = 'bold ' + fs + 'px system-ui, sans-serif';
+      x.fillText((RESTAURANT.name || 'Melt9').toUpperCase(), W / 2, H - barH + fs + 8);
+      x.fillStyle = '#ffffff';
+      x.fillText(DISH.name + '  •  Rs ' + DISH.price, W / 2, H - barH + fs * 2 + 14);
+      const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.92));
       if (!blob) throw new Error('photo failed');
       const file = new File([blob], 'melt9-' + key + '.jpg', { type: 'image/jpeg' });
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
