@@ -36,6 +36,11 @@
              white-space: nowrap; max-width: 92vw; }
   #arlabel .pr { display: block; color: #00e5ff; font-size: .95rem; }
   #arlabel .rn { display: block; color: #ffd166; font-size: .72rem; letter-spacing: .12em; }
+  /* AR actions: Add to cart + Photo, bottom centre, only in AR */
+  #aractions { display: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 14; gap: 8px; }
+  #aractions button { padding: 12px 18px; border-radius: 999px; font-weight: 700; font-size: .95rem; }
+  #hudadd { background: #1fa855; color: #fff; }
+  #hudphoto { background: rgba(0,0,0,.55); color: #fff; }
   button.alt { background: #fff; color: #1c1410; }
   #start { padding: 0; justify-content: flex-end; }
   #start model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; --poster-color: transparent;
@@ -224,6 +229,7 @@
 
 <div id="arlabel"><span class="rn" id="arlabel-rest"></span><span id="arlabel-name"></span><span class="pr" id="arlabel-price"></span></div>
 <div id="hud"><button id="detach">Detach</button><button id="mode" style="display:none">Drag: Rotate</button><button id="hud3d">3D view</button></div>
+<div id="aractions"><button id="hudadd" type="button">+ Add to cart</button><button id="hudphoto" type="button">📷 Photo</button></div>
 <div id="hint"></div>
 
 <script>
@@ -307,6 +313,8 @@
   document.title = DISH.name + ' · ' + RESTAURANT.name;
   $('dname').textContent = DISH.name;
   // Fixed AR label: text comes from dishes.js, so changing name/price there changes this label too - no new picture needed.
+  $('hudadd').setAttribute('data-add', key);
+  $('hudadd').textContent = '+ Add to cart · Rs ' + DISH.price;
   $('arlabel-rest').textContent = (RESTAURANT.name || '').toUpperCase();
   $('arlabel-name').textContent = DISH.name;
   $('arlabel-price').textContent = DISH.price ? 'Rs ' + DISH.price : '';
@@ -330,7 +338,7 @@
     $('go').classList.add('alt');
   }
 
-  const show = id => { $('arlabel').style.display = 'none'; ['start', 'error'].forEach(s => $(s).classList.toggle('on', s === id)); $('start').classList.remove('only3d'); document.body.classList.remove('hide-fab'); };
+  const show = id => { $('arlabel').style.display = 'none'; $('aractions').style.display = 'none'; ['start', 'error'].forEach(s => $(s).classList.toggle('on', s === id)); $('start').classList.remove('only3d'); document.body.classList.remove('hide-fab'); };
   const hint = t => { $('hint').textContent = t; };
   function showError(title, msg, code) {
     $('errtitle').textContent = title; $('errmsg').textContent = msg; $('errcode').textContent = code || '';
@@ -448,7 +456,7 @@
     document.body.insertAdjacentHTML('beforeend', `
 <a-scene id="scene"
          mindar-image="imageTargetSrc: ${DISH.mind}; autoStart: false; uiLoading: no; uiScanning: no; uiError: no; maxTrack: 1; filterMinCF: 0.0001; filterBeta: 0.001;"
-         color-space="sRGB" renderer="colorManagement: true; physicallyCorrectLights: true"
+         color-space="sRGB" renderer="colorManagement: true; physicallyCorrectLights: true; preserveDrawingBuffer: true"
          vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
   <a-assets><a-asset-item id="dish" src="${DISH.glb}"></a-asset-item></a-assets>
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -458,7 +466,7 @@
     <a-entity id="pop" hide-bottom scale="0.001 0.001 0.001"
               animation__pop="property: scale; from: 0.001 0.001 0.001; to: 1 1 1; dur: 1500; easing: easeOutBack; startEvents: popstart"
               animation__spin="property: rotation; from: 0 0 0; to: 0 0 360; dur: 1500; easing: easeOutCubic; startEvents: popstart">
-      <a-entity id="zoom"><a-entity id="tilt"><a-entity id="spin">
+      <a-entity id="zoom" animation__float="property: position; from: 0 0 0; to: 0 0 0.03; dur: 3000; dir: alternate; loop: true; easing: easeInOutSine"><a-entity id="tilt"><a-entity id="spin">
         <a-gltf-model src="#dish" rotation="${rot}" position="${pos}" scale="${sc}"></a-gltf-model>
         <a-plane src="dishes/holo-base.png" position="0 0 -0.30" width="1.4" height="1.4" transparent="true" material="transparent: true; depthWrite: false" animation="property: rotation; to: 0 0 360; dur: 12000; loop: true; easing: linear"></a-plane>
       </a-entity>
@@ -467,8 +475,12 @@
            It is inside tilt/zoom (so it moves and scales with the pizza) but outside spin (so it does not spin). -->
       <a-cylinder radius="0.65" height="0.60" open-ended="true" rotation="90 0 0" position="0 0 0.00" material="color: #00e5ff; transparent: true; opacity: 0.12; side: double; depthWrite: false"></a-cylinder>
       <a-cylinder radius="0.55" height="0.60" open-ended="true" rotation="90 0 0" position="0 0 0.00" material="color: #00e5ff; transparent: true; opacity: 0.06; side: double; depthWrite: false"></a-cylinder>
-      <a-ring radius-inner="0.62" radius-outer="0.68" position="0 0 0.30" material="color: #00e5ff; transparent: true; opacity: 0.85; side: double; depthWrite: false"></a-ring>
-      <a-ring radius-inner="0.62" radius-outer="0.68" position="0 0 -0.30" material="color: #00e5ff; transparent: true; opacity: 0.55; side: double; depthWrite: false"></a-ring>
+      <a-ring radius-inner="0.62" radius-outer="0.68" position="0 0 0.30" material="color: #ffd166; transparent: true; opacity: 0.85; side: double; depthWrite: false" animation__pulse="property: material.opacity; from: 0.9; to: 0.45; dur: 2000; dir: alternate; loop: true; easing: easeInOutSine"></a-ring>
+      <a-ring radius-inner="0.62" radius-outer="0.68" position="0 0 -0.30" material="color: #00e5ff; transparent: true; opacity: 0.55; side: double; depthWrite: false" animation__pulse="property: material.opacity; from: 0.6; to: 0.3; dur: 2000; dir: alternate; loop: true; easing: easeInOutSine"></a-ring>
+      <!-- soft shadow under the pizza, on the hologram floor -->
+      <a-plane src="dishes/shadow.png" position="0 0 -0.28" width="0.95" height="0.95" transparent="true" material="transparent: true; opacity: 0.45; depthWrite: false"></a-plane>
+      <!-- 1-second light flash when the pizza pops up (triggered in targetFound) -->
+      <a-plane id="flash" color="#ffffff" position="0 0 0.45" width="1.6" height="1.6" transparent="true" material="transparent: true; opacity: 0; depthWrite: false" animation__flash="property: material.opacity; from: 0.7; to: 0; dur: 1000; easing: easeOutQuad; startEvents: flashstart"></a-plane>
       </a-entity></a-entity>
     </a-entity>
   </a-entity>
@@ -515,6 +527,7 @@
       }
       started = true;
       $('hud').style.display = 'block';
+      $('aractions').style.display = 'flex';
       // Label stays hidden here - it only appears when the target photo is found and the pizza pops up (see targetFound below).
       hint('Point at the dish photo on the menu');
     } catch (e) {
@@ -544,11 +557,43 @@
     if (heroFinished) startEngine();    // otherwise heroDone() starts it right after the dish has loaded
   };
 
+  // Photo: composite the camera video + the AR canvas, add a Melt9 watermark, then share or download it.
+  // This runs only when the customer taps Photo, so it costs nothing while they are just looking.
+  $('hudphoto').onclick = async () => {
+    try {
+      const video = document.querySelector('#scene video') || document.querySelector('video');
+      const sc = scene && scene.canvas;
+      if (!video || !video.videoWidth || !sc) { hint('Take a screenshot with your phone buttons instead'); return; }
+      const labelWasShown = $('arlabel').style.display === 'block';
+      $('hud').style.display = 'none'; $('aractions').style.display = 'none'; $('arlabel').style.display = 'none'; hint('');
+      await new Promise(r => setTimeout(r, 120));
+      const c = document.createElement('canvas'); c.width = video.videoWidth; c.height = video.videoHeight;
+      const x = c.getContext('2d');
+      x.drawImage(video, 0, 0, c.width, c.height);
+      x.drawImage(sc, 0, 0, c.width, c.height);
+      x.fillStyle = 'rgba(0,0,0,0.55)'; x.fillRect(0, c.height - 64, c.width, 64);
+      x.fillStyle = '#fff'; x.font = 'bold 28px system-ui, sans-serif'; x.textAlign = 'center';
+      x.fillText((RESTAURANT.name || 'Melt9') + '  •  ' + DISH.name + '  •  Rs ' + DISH.price, c.width / 2, c.height - 22);
+      const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.9));
+      if (!blob) throw new Error('photo failed');
+      const file = new File([blob], 'melt9-' + key + '.jpg', { type: 'image/jpeg' });
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], text: DISH.name + ' at ' + (RESTAURANT.name || '') });
+      } else {
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      }
+      hint('Photo saved ✓  Share it and tag ' + (RESTAURANT.name || 'Melt9'));
+    } catch (e) { hint('Photo did not save — take a screenshot with your phone buttons instead'); }
+    $('hud').style.display = 'block'; $('aractions').style.display = 'flex'; if (labelWasShown) $('arlabel').style.display = 'block';
+  };
+
   function stopAR() {
     try { if (started) sys().stop(); } catch (e) {}
     started = false;
     if (window.__attachBack) window.__attachBack(false);
     $('hud').style.display = 'none';
+    $('aractions').style.display = 'none';
     $('arlabel').style.display = 'none';
     hint('');
   }
@@ -574,6 +619,7 @@
     t0.addEventListener('targetFound', () => {
       found = true; clearTimeout(goneTimer);
       $('arlabel').style.display = 'block';   // exact time the pizza is loaded / pops up
+      const fl = document.getElementById('flash'); if (fl) fl.emit('flashstart');   // 1-second light flash
       if (!detached) hint('Drag to rotate · pinch to zoom');
       if (!detached && gone) { gone = false; playPop(); }
     });
